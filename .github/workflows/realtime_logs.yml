@@ -1,0 +1,25 @@
+name: Real-Time Azure Log Simulation
+
+on:
+  push:
+  schedule:
+    - cron: "*/1 * * * *"  # Update setiap 1 menit
+  workflow_dispatch:        # Bisa dijalankan manual jika perlu
+
+jobs:
+  real-time-logger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "herwinz"
+          git config --global user.email "berlianherwindra@gmail.com"
+
+      - name: Run Real-Time Log Update
+        run: |
+          chmod +x auto_log_update.sh
+          ./auto_log_update.sh
