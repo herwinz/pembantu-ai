@@ -122,7 +122,7 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global user.name "pembantu-ai"
+          git config --global user.name "herwinz"
           git config --global user.email "berlianherwindra@gmail.com"
 
       - name: Run Real-Time Log Update
