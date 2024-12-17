@@ -1,0 +1,9 @@
+{
+  "timestamp": "2024-12-17T00:37:38Z",
+  "metrics": {
+    "CPU_Percent": 48.7195,
+    "Memory_Bytes": 1000016866,
+    "Request_Count": 1941,
+    "Latency_ms": 254.986
+  }
+}
