@@ -2,7 +2,7 @@ name: Real-Time Azure Log Simulation
 
 on:
   schedule:
-    - cron: "*/1 * * * *"  # Update setiap 1 menit
+    - cron: "*/2 * * * *"  # Update setiap 1 menit
   workflow_dispatch:
 
 jobs:
