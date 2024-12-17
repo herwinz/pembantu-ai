@@ -9,10 +9,10 @@ for i in {1..60}; do
   CURRENT_TIME=$(date -u -d "+7 hours" +"%Y-%m-%dT%H:%M:%S WIB")
 
   # Simulasi data metrik Azure App Service
-  CPU_PERCENT=$(awk -v min=10 -v max=95 'BEGIN{srand(); print min+rand()*(max-min)}')  # 10% - 95%
-  MEMORY_BYTES=$((RANDOM % 5000000000 + 1000000000))  # 1GB - 6GB
-  REQUEST_COUNT=$((RANDOM % 2000 + 500))  # 500 - 2500 requests
-  LATENCY_MS=$(awk -v min=50 -v max=500 'BEGIN{srand(); print min+rand()*(max-min)}')  # 50ms - 500ms
+  CPU_PERCENT=$(awk -v min=10 -v max=95 'BEGIN{srand(); print min+rand()*(max-min)}')
+  MEMORY_BYTES=$((RANDOM % 5000000000 + 1000000000))
+  REQUEST_COUNT=$((RANDOM % 2000 + 500))
+  LATENCY_MS=$(awk -v min=50 -v max=500 'BEGIN{srand(); print min+rand()*(max-min)}')
 
   # Format data sebagai JSON
   JSON_LOG_ENTRY=$(cat <<EOF
@@ -30,12 +30,8 @@ EOF
 
   # Tambahkan log ke file
   echo "$JSON_LOG_ENTRY" >> $LOG_FILE
+  echo "Log entry $i added at $CURRENT_TIME"
 
   # Tunggu 1 detik sebelum iterasi berikutnya
   sleep 1
 done
-
-# Commit dan push perubahan ke GitHub
-git add $LOG_FILE
-git commit -m "Real-time Log Update (WIB): $(date -u -d '+7 hours' +"%Y-%m-%d %H:%M:%S WIB")"
-git push origin main

@@ -1,30 +1,39 @@
 name: Real-Time Azure Log Simulation
 
 on:
-  push:
   schedule:
-    - cron: "*/1 * * * *"  # Update setiap 1 menit
-  workflow_dispatch:        # Memungkinkan pemicu manual
+    - cron: "*/1 * * * *"  # Jalankan setiap 1 menit
+  workflow_dispatch:        # Bisa dijalankan manual
 
 jobs:
   real-time-logger:
     runs-on: ubuntu-latest
 
-    permissions:            # Menambahkan izin write
+    permissions:            # Izin untuk write ke repository
       contents: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # Gunakan token default GitHub Actions
+          persist-credentials: true  # Token default untuk push
 
       - name: Setup Git
         run: |
           git config --global user.name "herwinz"
           git config --global user.email "berlianherwindra@gmail.com"
 
-      - name: Run Real-Time Log Update
+      - name: Update Log File
         run: |
+          # Pastikan repo up-to-date
+          git pull origin main
+
+          # Jalankan script log generator
           chmod +x scripts/auto_log_update.sh
           ./scripts/auto_log_update.sh
+
+      - name: Commit and Push Changes
+        run: |
+          git add logs/azure_monitor_log.json
+          git commit -m "Automated Log Update: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push origin main
