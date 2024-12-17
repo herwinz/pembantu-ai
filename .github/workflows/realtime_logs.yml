@@ -1,12 +1,10 @@
 name: Real-Time Azure Log Simulation
 
 on:
-  push:                        # Trigger saat ada push ke branch 'main'
+  workflow_dispatch:        # Bisa dijalankan manual dari GitHub Actions UI
+  push:                     # Trigger saat ada push ke branch 'main'
     branches:
       - main
-  schedule:
-    - cron: "*/1 * * * *"  # Jalankan setiap 1 menit
-  workflow_dispatch:        # Memungkinkan pemicu manual
 
 jobs:
   real-time-logger:
@@ -19,24 +17,32 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true
+          persist-credentials: true  # Gunakan GITHUB_TOKEN bawaan
 
       - name: Setup Git
         run: |
           git config --global user.name "herwinz"
           git config --global user.email "berlianherwindra@gmail.com"
 
-      - name: Update Log File (60 Updates in 1 Minute)
+      - name: Long-Running Log Update
         run: |
-          for i in {1..60}; do
-            echo "Running log update $i at $(date -u +'%Y-%m-%dT%H:%M:%S UTC')"
-            chmod +x scripts/auto_log_update.sh
-            ./scripts/auto_log_update.sh
-            sleep 1
-          done
+          # Loop tanpa henti
+          while true; do
+            echo "Starting 60-second log generation at $(date -u)"
+            # Loop 60 detik untuk update log
+            for i in {1..60}; do
+              echo "Log update $i at $(date -u +'%Y-%m-%dT%H:%M:%S UTC')"
+              chmod +x scripts/auto_log_update.sh
+              ./scripts/auto_log_update.sh
+              sleep 1  # Tunggu 1 detik
+            done
 
-      - name: Commit and Push Changes
-        run: |
-          git add logs/azure_monitor_log.json
-          git commit -m "Automated Log Update: $(date -u)"
-          git push origin main
+            # Commit dan push setelah 60 detik selesai
+            echo "Committing and pushing changes at $(date -u)"
+            git add logs/azure_monitor_log.json
+            git commit -m "Automated Log Update: $(date -u +'%Y-%m-%dT%H:%M:%S UTC')"
+            git push origin main || echo "No changes to push"
+
+            # Log status
+            echo "60-second update cycle completed. Starting next cycle..."
+          done
