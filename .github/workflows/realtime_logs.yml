@@ -7,10 +7,6 @@ on:
   schedule:
     - cron: "*/1 * * * *"  # Jalankan setiap 1 menit
   workflow_dispatch:        # Memungkinkan pemicu manual
-  workflow_run:             # Self-trigger setelah workflow selesai
-    workflows: ["Real-Time Azure Log Simulation"]
-    types:
-      - completed
 
 jobs:
   real-time-logger:
@@ -30,10 +26,14 @@ jobs:
           git config --global user.name "herwinz"
           git config --global user.email "berlianherwindra@gmail.com"
 
-      - name: Update Log File
+      - name: Update Log File (60 Updates in 1 Minute)
         run: |
-          chmod +x scripts/auto_log_update.sh
-          ./scripts/auto_log_update.sh
+          for i in {1..60}; do
+            echo "Running log update $i at $(date -u +'%Y-%m-%dT%H:%M:%S UTC')"
+            chmod +x scripts/auto_log_update.sh
+            ./scripts/auto_log_update.sh
+            sleep 1
+          done
 
       - name: Commit and Push Changes
         run: |
