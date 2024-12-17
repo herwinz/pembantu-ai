@@ -5,8 +5,8 @@ LOG_FILE="logs/azure_monitor_log.json"
 
 # Loop untuk menambahkan 60 log entry dalam 1 menit
 for i in {1..60}; do
-  # Simulasi waktu UTC (seperti Azure Monitor)
-  CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  # Simulasi waktu WIB (UTC+7)
+  CURRENT_TIME=$(date -u -d "+7 hours" +"%Y-%m-%dT%H:%M:%S WIB")
 
   # Simulasi data metrik Azure App Service
   CPU_PERCENT=$(awk -v min=10 -v max=95 'BEGIN{srand(); print min+rand()*(max-min)}')  # 10% - 95%
@@ -37,5 +37,5 @@ done
 
 # Commit dan push perubahan ke GitHub
 git add $LOG_FILE
-git commit -m "Real-time Log Update: $(date -u)"
+git commit -m "Real-time Log Update (WIB): $(date -u -d '+7 hours' +"%Y-%m-%d %H:%M:%S WIB")"
 git push origin main
