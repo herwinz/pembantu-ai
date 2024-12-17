@@ -1,9 +1,12 @@
 name: Real-Time Azure Log Simulation
 
 on:
+  push:                            # Menjalankan workflow saat ada commit dan push
+    branches:
+      - main                       # Hanya untuk branch 'main'
   schedule:
-    - cron: "*/2 * * * *"  # Update setiap 1 menit
-  workflow_dispatch:
+    - cron: "*/1 * * * *"          # Workflow juga berjalan setiap 1 menit
+  workflow_dispatch:               # Memungkinkan pemicu manual
 
 jobs:
   real-time-logger:
