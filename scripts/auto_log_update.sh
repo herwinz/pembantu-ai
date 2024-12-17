@@ -3,7 +3,7 @@
 # File log
 LOG_FILE="logs/azure_monitor_log.json"
 
-# Loop untuk menambahkan 60 log entry dalam 1 menit
+# Loop untuk menambahkan 60 log entry dalam 1 menitnya
 for i in {1..60}; do
   # Simulasi waktu WIB (UTC+7)
   CURRENT_TIME=$(date -u -d "+7 hours" +"%Y-%m-%dT%H:%M:%S WIB")
