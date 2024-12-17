@@ -4,22 +4,26 @@ on:
   push:                        # Trigger saat ada push ke branch 'main'
     branches:
       - main
-  schedule:                    # Trigger otomatis setiap 1 menit
-    - cron: "*/1 * * * *"
-  workflow_dispatch:           # Trigger manual dari GitHub Actions UI
+  schedule:
+    - cron: "*/1 * * * *"  # Jalankan setiap 1 menit
+  workflow_dispatch:        # Memungkinkan pemicu manual
+  workflow_run:             # Self-trigger setelah workflow selesai
+    workflows: ["Real-Time Azure Log Simulation"]
+    types:
+      - completed
 
 jobs:
   real-time-logger:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write          # Izinkan write ke repository
+      contents: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # Gunakan GITHUB_TOKEN default
+          persist-credentials: true
 
       - name: Setup Git
         run: |
@@ -28,12 +32,11 @@ jobs:
 
       - name: Update Log File
         run: |
-          git pull origin main
           chmod +x scripts/auto_log_update.sh
           ./scripts/auto_log_update.sh
 
       - name: Commit and Push Changes
         run: |
           git add logs/azure_monitor_log.json
-          git commit -m "Automated Log Update: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git commit -m "Automated Log Update: $(date -u)"
           git push origin main
