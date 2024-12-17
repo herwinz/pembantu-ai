@@ -1,20 +1,23 @@
 name: Real-Time Azure Log Simulation
 
 on:
-  push:                            # Menjalankan workflow saat ada commit dan push
-    branches:
-      - main                       # Hanya untuk branch 'main'
+  push:
   schedule:
-    - cron: "*/1 * * * *"          # Workflow juga berjalan setiap 1 menit
-  workflow_dispatch:               # Memungkinkan pemicu manual
+    - cron: "*/1 * * * *"  # Update setiap 1 menit
+  workflow_dispatch:        # Memungkinkan pemicu manual
 
 jobs:
   real-time-logger:
     runs-on: ubuntu-latest
 
+    permissions:            # Menambahkan izin write
+      contents: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # Gunakan token default GitHub Actions
 
       - name: Setup Git
         run: |
